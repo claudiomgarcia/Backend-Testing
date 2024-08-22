@@ -1,0 +1,334 @@
+openapi: 3.0.1
+info:
+  title: API de Carritos
+  description: Documentación del módulo de carritos y compra
+  version: "1.0.0"
+
+paths:
+  /api/carts:
+    get:
+      summary: Obtiene todos los carritos
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: Carritos obtenidos con éxito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                    products:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          productId:
+                            type: string
+                          quantity:
+                            type: integer
+                    totalPrice:
+                      type: number
+                      format: float
+                example:
+                  - _id: "64a6b7a4562b1f098cb19bf7"
+                    products:
+                      - productId: "64a6b7a4562b1f098cb19b12"
+                        quantity: 2
+                    totalPrice: 59.99
+
+  /api/carts/{cid}:
+    get:
+      summary: Obtiene un carrito según su id
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Carrito obtenido con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        productId:
+                          type: string
+                        quantity:
+                          type: integer
+                  totalPrice:
+                    type: number
+                    format: float
+                example:
+                  _id: "64a6b7a4562b1f098cb19bf7"
+                  products:
+                    - productId: "64a6b7a4562b1f098cb19b12"
+                      quantity: 2
+                  totalPrice: 59.99
+        '404':
+          description: Carrito no encontrado
+        '500':
+          description: Error interno del servidor
+
+    put:
+      summary: Actualiza el carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      productId:
+                        type: string
+                      quantity:
+                        type: integer
+              example:
+                products:
+                  - productId: "64a6b7a4562b1f098cb19b12"
+                    quantity: 3
+      responses:
+        '200':
+          description: Carrito actualizado con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        productId:
+                          type: string
+                        quantity:
+                          type: integer
+                  totalPrice:
+                    type: number
+                    format: float
+                example:
+                  _id: "64a6b7a4562b1f098cb19bf7"
+                  products:
+                    - productId: "64a6b7a4562b1f098cb19b12"
+                      quantity: 3
+                  totalPrice: 89.99
+        '500':
+          description: Error al actualizar el carrito
+
+    delete:
+      summary: Vacía el carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Carrito vaciado con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "Se eliminaron todos los productos del carrito 64a6b7a4562b1f098cb19bf7"
+        '500':
+          description: Error al vaciar el carrito
+
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Añade un producto a un carrito específico
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Producto añadido al carrito con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "Se agregó el producto 123 al carrito 456"
+        '500':
+          description: Error al añadir el producto al carrito
+
+  /api/carts/{cid}/products/{pid}:
+    put:
+      summary: Modifica la cantidad de un producto en el carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+              example:
+                quantity: 5
+      responses:
+        '200':
+          description: Cantidad del producto actualizada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "Cantidad actualizada"
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                example:
+                  error: "Ingresar solo números positivos"
+        '500':
+          description: Error al actualizar la cantidad del producto
+
+    delete:
+      summary: Elimina un producto del carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Producto eliminado del carrito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "Se eliminó el producto 123 del carrito 456"
+        '500':
+          description: Error al eliminar el producto del carrito
+
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Realiza la compra de los productos en el carrito
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Compra realizada con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  amount:
+                    type: number
+                    format: float
+                  purchase_datetime:
+                    type: string
+                  purchaser:
+                    type: string
+                example:
+                  code: "abc123"
+                  amount: 150.50
+                  purchase_datetime: "2024-08-18T14:48:00.000Z"
+                  purchaser: "usuario@example.com"
+        '404':
+          description: Carrito no encontrado
+        '500':
+          description: Error al realizar la compra

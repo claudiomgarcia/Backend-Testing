@@ -1,0 +1,81 @@
+<div class="container pt-5">
+    <h1 class="title pb-3"><a href="/products">Inicio</a></h1>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Detalle del Carrito - ({{cart._id}})</h1>
+            <table class="table is-fullwidth is-striped">
+                <thead>
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Título</th>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each cart.products}}
+                    <tr>
+                        <td><img src="{{this.product.thumbnail}}" alt="{{this.product.title}}" style="width: 100px"></td>
+                        <td>{{this.product.title}}</td>
+                        <td>{{this.product.description}}</td>
+                        <td class="is-vcentered">
+                            <div class="field has-addons">
+                                <p class="control ">
+                                    <button class="button is-danger" disabled>-</button>
+                                </p>
+                                <p class="control">
+                                    <input class="input has-text-centered" type="text" value="{{this.quantity}}" style="width: 40px" disabled>
+                                </p>
+                                <p class="control">
+                                    <button class="button is-success" disabled>+</button>
+                                </p>
+                            </div>
+                        </td>
+                        <td>${{multiply this.product.price this.quantity}}</td>
+                        <td class="is-vcentered">
+                            {{#if this.inStock}}
+                                <span class="tag is-success">En stock</span>
+                            {{else}}
+                                <span class="tag is-danger">Sin stock</span>
+                            {{/if}}
+                        </td>
+                        <td class="is-vcentered">
+                            <div class="has-text-centered">
+                                <button class="tag is-rounded is-delete" id="delete-product" data-cid="{{../cart._id}}" data-pid="{{this.product._id}}"></button>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="6" class="has-text-right">Total:</th>
+                        <th>${{cartTotal cart.products}}</th>
+                    </tr>
+                    <tr>
+                        <td colspan="7">
+                            <div class="is-pulled-right buttons">
+                                <a href="/products" class="button is-dark">Seguir comprando</a>
+                                {{#if (hasProducts cart.products)}}
+                                <button class="button is-danger" id="empty-cart" data-cid="{{cart._id}}">Vaciar Carrito</button>
+                                {{/if}}
+                                {{#if (hasProducts cart.products)}}
+                                <form action="/api/carts/{{cart._id}}/purchase" method="post" style="display: inline;">
+                                    <button class="button is-success" {{#if (hasOutOfStock cart.products)}}disabled{{/if}}>Comprar</button>
+                                </form>
+                                {{/if}}
+                            </div>
+                            <p>{{#if (hasOutOfStock cart.products)}}Hay productos sin stock en el carrito, por favor eliminelos para continuar con la compra{{/if}}</p>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </section>
+</div>
+
+<script src="/js/cart.js"></script>

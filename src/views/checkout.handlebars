@@ -1,0 +1,14 @@
+<div class="container pt-5">
+    <h1 class="title pb-3"><a href="/products">Inicio</a></h1>
+
+    <h1 class="title pb-3">Confirmación de Compra</h1>
+
+    <div class="notification is-success">
+        <p>¡Gracias por tu compra!</p>
+        <p>Tu orden con el código {{ ticket.code }} fue realizada el {{ ticket.purchase_datetime }}.</p>
+        <p>Total de compra: ${{ ticket.amount }}.-</p>
+        <p>Te hemos enviado un correo electrónico con los detalles de tu compra.</p>
+    </div>
+
+    <a href="/products" class="button is-dark">Seguir comprando</a>
+</div>

@@ -1,0 +1,343 @@
+openapi: 3.0.1
+info:
+  title: API de Productos
+  description: Documentación del módulo de productos
+  version: "1.0.0"
+
+paths:
+  /api/products:
+    get:
+      summary: Obtiene todos los productos
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Número de productos a devolver
+        - name: sort
+          in: query
+          schema:
+            type: string
+          description: Orden de los productos
+        - name: query
+          in: query
+          schema:
+            type: string
+          description: Filtros de búsqueda
+        - name: page
+          in: query
+          schema:
+            type: integer
+          description: Número de página
+      responses:
+        '200':
+          description: Productos obtenidos con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  payload:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                        title:
+                          type: string
+                        price:
+                          type: number
+                          format: float
+                        description:
+                          type: string
+                        stock:
+                          type: integer
+                        category:
+                          type: string
+                  totalPages:
+                    type: integer
+                  prevPage:
+                    type: integer
+                  nextPage:
+                    type: integer
+                  page:
+                    type: integer
+                  hasPrevPage:
+                    type: boolean
+                  hasNextPage:
+                    type: boolean
+                  prevLink:
+                    type: string
+                  nextLink:
+                    type: string
+                example:
+                  status: "success"
+                  payload:
+                    - _id: "64a6b7a4562b1f098cb19b12"
+                      title: "Producto A"
+                      price: 29.99
+                      description: "Descripción del producto A"
+                      stock: 100
+                      category: "Categoría A"
+                  totalPages: 5
+                  prevPage: 1
+                  nextPage: 3
+                  page: 2
+                  hasPrevPage: true
+                  hasNextPage: true
+                  prevLink: "/products?page=1"
+                  nextLink: "/products?page=3"
+
+    post:
+      summary: Añade un nuevo producto
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                price:
+                  type: number
+                  format: float
+                description:
+                  type: string
+                stock:
+                  type: integer
+                category:
+                  type: string
+                code:
+                  type: string
+              example:
+                title: "Producto C"
+                price: 49.99
+                description: "Descripción del producto C"
+                stock: 200
+                category: "Categoría C"
+                code: "PC123"
+      responses:
+        '201':
+          description: Producto añadido con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "Se agregó correctamente el producto con el código \"PC123\""
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                example:
+                  error: "Faltan campos obligatorios"
+        '500':
+          description: Error interno del servidor
+
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un producto por su ID
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Producto obtenido con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  title:
+                    type: string
+                  price:
+                    type: number
+                    format: float
+                  description:
+                    type: string
+                  stock:
+                    type: integer
+                  category:
+                    type: string
+                example:
+                  _id: "64a6b7a4562b1f098cb19b12"
+                  title: "Producto A"
+                  price: 29.99
+                  description: "Descripción del producto A"
+                  stock: 100
+                  category: "Categoría A"
+        '404':
+          description: Producto no encontrado
+        '500':
+          description: Error interno del servidor
+
+    put:
+      summary: Actualiza un producto
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                price:
+                  type: number
+                  format: float
+                description:
+                  type: string
+                stock:
+                  type: integer
+                category:
+                  type: string
+              example:
+                title: "Producto B"
+                price: 39.99
+                description: "Descripción actualizada del producto B"
+                stock: 50
+                category: "Categoría B"
+      responses:
+        '200':
+          description: Producto actualizado con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "Se actualizó el producto 64a6b7a4562b1f098cb19b12"
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                example:
+                  error: "No se puede modificar el ID del producto"
+        '404':
+          description: Producto no encontrado
+        '500':
+          description: Error interno del servidor
+
+    delete:
+      summary: Elimina un producto
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Producto eliminado con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: "Se eliminó correctamente el producto con el id 64a6b7a4562b1f098cb19b12"
+        '404':
+          description: Producto no encontrado
+        '500':
+          description: Error interno del servidor
+
+  /api/products/mocking:
+    get:
+      summary: Genera productos ficticios para pruebas
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Productos ficticios generados con éxito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                    title:
+                      type: string
+                    price:
+                      type: number
+                      format: float
+                    description:
+                      type: string
+                    stock:
+                      type: integer
+                    category:
+                      type: string
+                example:
+                  - _id: "64a6b7a4562b1f098cb19b12"
+                    title: "Producto Mock 1"
+                    price: 19.99
+                    description: "Descripción del producto Mock 1"
+                    stock: 100
+                    category: "Categoría Mock"
+                  - _id: "64a6b7a4562b1f098cb19b13"
+                    title: "Producto Mock 2"
+                    price: 29.99
+                    description: "Descripción del producto Mock 2"
+                    stock: 150
+                    category: "Categoría Mock"
+        '500':
+          description: Error interno del servidor

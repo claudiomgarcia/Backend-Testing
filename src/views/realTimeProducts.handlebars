@@ -1,0 +1,101 @@
+<div class="container pt-5">
+    <div class="buttons is-right">
+        <b>Bienvenido {{user.first_name}}</b>
+        <a href="/realtimeproducts" class="button is-small is-link">Admin Panel</a>
+        <a href="/profile" class="button is-small is-link">Mi cuenta</a>
+        <form action="/api/sessions/logout" method="POST">
+            <button type="submit" class="button is-small is-dark">Cerrar Sesión</button>
+        </form>
+    </div>
+    <h1 class="title pb-3"><a href="/">Inicio</a></h1>
+
+    <div class="columns is-centered">
+        <div class="column">
+
+            <table class="table is-fullwidth is-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Título</th>
+                        <th>Categoria</th>
+                        <th>Stock</th>
+                        <th>Precio</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody id="list-products">
+
+                </tbody>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<br />
+<hr>
+
+<div class="fixed-grid">
+    <div class="grid">
+        <div class="cell">
+            <h2 class="subtitle">Agregar Producto</h2>
+            <div class="field column is-half">
+                <form id="formProduct">
+                    <label class="label">Titulo</label>
+                    <div class="control mb-2">
+                        <input class="input" name="title" id="title" type="text" placeholder="Título" required>
+                    </div>
+                    <label class="label">Descripción</label>
+                    <div class="control mb-2">
+                        <input class="input" name="description" id="description" type="text" placeholder="Descripción"
+                            required>
+                    </div>
+                    <label class="label">Categoria</label>
+                    <div class="control mb-2">
+                        <input class="input" name="category" id="category" type="text" placeholder="Descripción"
+                            required>
+                    </div>
+                    <label class="label">Precio</label>
+                    <div class="control mb-2">
+                        <input class="input" name="price" id="price" type="number" placeholder="Precio" required>
+                    </div>
+                    <label class="label">Codigo</label>
+                    <div class="control mb-2">
+                        <input class="input" name="code" id="code" type="text" placeholder="Código" required>
+                    </div>
+                    <label class="label">Stock</label>
+                    <div class="control mb-2">
+                        <input class="input" name="stock" id="stock" type="number" placeholder="Stock" required>
+                    </div>
+                    <label class="label">Imágen (url)</label>
+                    <div class="control mb-2">
+                        <input class="input" name="thumbnail" id="thumbnail" type="text" placeholder="Imágen (url)">
+                    </div>
+                    <label class="label">Status</label>
+                    <div class="control mb-2">
+                        <input name="status" class="checkbox" type="checkbox" value="true" id="flexCheckChecked"
+                            checked>
+                    </div>
+                    <div class="control mb-2">
+                        <button class="button is-dark" type="submit" id="add-btn">Agregar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="cell">
+            <h2 class="subtitle">Eliminar Producto</h2>
+            <div class="field column is-half">
+                <label class="label">Id de Producto</label>
+                <div class="control mb-2">
+                    <input class="input" name="id" id="id-prod" type="text" placeholder="ID" required>
+                </div>
+                <div class="control mb-2">
+                    <button class="button is-danger" type="button" id="delete-btn">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>
